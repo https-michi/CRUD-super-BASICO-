@@ -22,8 +22,6 @@ public class Categoria implements Serializable {
 	@Column(name = "nombre_categoria", nullable = false)
 	private String nomCategoria;
 	
-	//@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
-	//(private List<Producto> productos;
 	
 	public Categoria() {
 		super();
@@ -58,6 +56,11 @@ public class Categoria implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "Categoria [categoriaId=" + categoriaId + ", nomCategoria=" + nomCategoria + "]";
 	}
 	
 	

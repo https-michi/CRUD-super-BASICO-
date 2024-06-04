@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import Entidades.Categoria;
 
@@ -16,41 +17,71 @@ public class CategoriaDAOimpl implements ICategoriaDAO {
 		entityManager = Persistence.createEntityManagerFactory("ProCRUD").createEntityManager();
 	}
 
-	// Método para crear una nueva categoría
 	@Override
 	public void crearCategoria(Categoria categoria) {
 		try {
-			entityManager.getTransaction().begin(); // Inicia la transacción
-			entityManager.persist(categoria); // Inserta la categoría en la base de datos
-			entityManager.getTransaction().commit(); // Confirma la transacción
+			entityManager.getTransaction().begin(); 
+			entityManager.persist(categoria); 
+			entityManager.getTransaction().commit(); 
 		} catch (Exception e) {
 			System.out.println("Ocurrió un error: " + e.getMessage());
 		} finally {
-			entityManager.clear();
+			entityManager.close();
 		}
 	}
 
 	@Override
 	public Categoria buscarPorIdCategoria(Integer id) {
-		return null;
+		Categoria categoria = null;
+		try {
+			categoria = entityManager.find(Categoria.class, id);
+		} catch (Exception e) {
+			System.out.println("Ocurrió un error: " + e.getMessage());
+		}
+		return categoria;
 	}
 
 	@Override
 	public List<Categoria> buscarCategoria() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Categoria> categorias = null;
+		try {
+			Query query = entityManager.createQuery("SELECT c FROM Categoria c");
+			categorias = query.getResultList();
+		} catch (Exception e) {
+			System.out.println("Ocurrió un error: " + e.getMessage());
+		}
+		return categorias;
 	}
 
 	@Override
 	public void actualizarCategoria(Categoria categoria) {
-		// TODO Auto-generated method stub
-
+		try {
+			entityManager.getTransaction().begin();
+			entityManager.merge(categoria);
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			System.out.println("Ocurrió un error: " + e.getMessage());
+			if (entityManager.getTransaction().isActive()) {
+				entityManager.getTransaction().rollback();
+			}
+		}
 	}
 
 	@Override
 	public void eliminarCategoria(Integer id) {
-		// TODO Auto-generated method stub
-
+		try {
+			entityManager.getTransaction().begin();
+			Categoria categoria = entityManager.find(Categoria.class, id);
+			if (categoria != null) {
+				entityManager.remove(categoria);
+			}
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			System.out.println("Ocurrió un error: " + e.getMessage());
+			if (entityManager.getTransaction().isActive()) {
+				entityManager.getTransaction().rollback();
+			}
+		}
 	}
 
 }
