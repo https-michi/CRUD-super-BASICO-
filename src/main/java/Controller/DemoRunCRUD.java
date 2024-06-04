@@ -1,7 +1,6 @@
 package Controller;
 
 import java.util.List;
-
 import Entidades.Categoria;
 import dao.CategoriaDAOimpl;
 
@@ -10,20 +9,24 @@ public class DemoRunCRUD {
     private static CategoriaDAOimpl categoriaDAO = new CategoriaDAOimpl();
 
     public static void main(String[] args) {
-        // Crear una nueva categoría
-        crearCategoria("Diseño");
+        try {
+            // Crear una nueva categoría
+            crearCategoria("Diseño");
 
-        // Buscar categoría por ID
-        //buscarPorIdCategoria(3);
+            // Buscar categoría por ID
+            buscarPorIdCategoria(3);
 
-        // Actualizar una categoría existente
-        //actualizarCategoria(3, "electronica");
+            // Actualizar una categoría existente
+            actualizarCategoria(3, "electronica");
 
-        // Buscar todas las categorías
-        //buscarCategorias();
+            // Buscar todas las categorías
+            buscarCategorias();
 
-        // Eliminar una categoría por ID
-        //eliminarCategoria(1);
+            // Eliminar una categoría por ID
+            eliminarCategoria(1);
+        } finally {
+            categoriaDAO.close();
+        }
     }
 
     private static void crearCategoria(String nombreCategoria) {
@@ -44,8 +47,10 @@ public class DemoRunCRUD {
     private static void buscarCategorias() {
         List<Categoria> categorias = categoriaDAO.buscarCategoria();
         System.out.println("Categorías encontradas:");
-        for (Categoria categoria : categorias) {
-            System.out.println(categoria);
+        if (categorias != null) {
+            for (Categoria categoria : categorias) {
+                System.out.println(categoria);
+            }
         }
     }
 
